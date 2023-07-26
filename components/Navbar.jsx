@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes"; //Helps to check if currently its light mode or dark mode
 import Image from "next/image"; //next js optimized version of img tag
 import Link from "next/link";
 
 import images from "../assets";
+import Button from "./Button";
 import { ThemeSwitcher } from "@/utils/ThemeSwitcher";
 
 const MenuItems = ({ isMobile, active, setActive }) => {
@@ -45,9 +46,32 @@ const MenuItems = ({ isMobile, active, setActive }) => {
   );
 };
 
+const ButtonGroup = ({ setActive, router }) => {
+  const hasConnected = true;
+
+  return hasConnected ? (
+    <Button
+      btnName="Create"
+      classStyles="mx-2 rounded-xl"
+      handleClick={() => {
+        setActive("");
+        router.push("/create-nft");
+      }}
+    />
+  ) : (
+    <Button
+      btnName="Connect"
+      classStyles="mx-2 rounded-xl"
+      handleClick={() => {}}
+    />
+  );
+};
+
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
   const [active, setActive] = useState("Explore NFTs");
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div>
       <nav className="flexBetween w-full fixed z-10 p-4 flex-row border-b dark:bg-nft-dark bg-white dark:border-nft-black-1 border-nft-gray-1">
@@ -85,11 +109,49 @@ const Navbar = () => {
           <div className="flex items-center mr-2">
             <ThemeSwitcher />
           </div>
-        </div>
-        <div className="md:hidden flex">
-          <ul className="list-none flexCenter flex-row">
+          <div className="md:hidden flex">
             <MenuItems active={active} setActive={setActive} />
-          </ul>
+            <div className="ml-4">
+              <ButtonGroup setActive={setActive} router={router}></ButtonGroup>
+            </div>
+          </div>
+        </div>
+        <div className="hidden md:flex" ml-2>
+          {isOpen ? (
+            <Image
+              src={images.cross}
+              objectFit="contain"
+              width={20}
+              height={20}
+              alt="close"
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              className={`ml-2 ${theme === "light" && "filter invert"}`}
+            />
+          ) : (
+            <Image
+              src={images.menu}
+              objectFit="contain"
+              width={25}
+              height={25}
+              alt="menu"
+              onClick={() => {
+                setIsOpen(true);
+              }}
+              className={`ml-2 ${theme === "light" && "filter invert"}`}
+            />
+          )}
+          {isOpen && (
+            <div className="fixed inset-0 top-65 dark:bg-nft-dark bg-white z-10 nav-h flex justify-between flex-col">
+              <div className="flex-1 p-4">
+                <MenuItems active={active} setActive={setActive} isMobile />
+              </div>
+              <div className="p-4 border-t dark:border-nft-black-1 border-nft-gray-1">
+                <ButtonGroup setActive={setActive} router={router} />
+              </div>
+            </div>
+          )}
         </div>
       </nav>
     </div>
