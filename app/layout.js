@@ -1,8 +1,12 @@
 "use client";
 import "./globals.css";
+import Script from "next/script";
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "./utils/ThemeProvider";
-import { ThemeSwitcher } from "./utils/ThemeSwitcher";
+
+import { ThemeProvider } from "../utils/ThemeProvider";
+import { ThemeSwitcher } from "../utils/ThemeSwitcher";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
@@ -15,14 +19,17 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} bg-slate-50 dark:bg-[#0d1117]`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ThemeSwitcher />
           <div className="dark:bg-nft-dark bg-white min-h-screen">
-            <h1>Header</h1>
+            <Navbar />
             {children}
-            <h1>Footer</h1>
+            <Footer />
           </div>
         </ThemeProvider>
       </body>
+      <Script
+        src="https://kit.fontawesome.com/9d824703d1.js"
+        crossorigin="anonymous"
+      />
     </html>
   );
 }
