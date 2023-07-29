@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="dark:bg-nft-dark bg-white min-h-screen">
             <Navbar />
-            {children}
+            <div className="pt-65">{children}</div>
             <Footer />
           </div>
         </ThemeProvider>
