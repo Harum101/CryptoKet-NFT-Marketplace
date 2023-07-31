@@ -1,22 +1,29 @@
 "use client";
 import React, { useState, useMemo, useCallback, useContext } from "react";
-import { useRouter } from "next/router";
+import { NFTContext } from "@/context/NFTContext";
+import { useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone"; //Drop Images
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import Button from "@/components/Button";
 import images from "@/assets";
 import Input from "@/components/Input";
+
 const CreateNFT = () => {
+  const { uploadToIPFS, createNFT } = useContext(NFTContext);
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, setFormInput] = useState({
     price: "",
     name: "",
     description: "",
   });
+  const router = useRouter();
   const { theme } = useTheme();
-  const onDrop = useCallback(() => {
+  const onDrop = useCallback(async (acceptedFile) => {
     //Here we will want to upload image to IPFS
+    const url = await uploadToIPFS(acceptedFile[0]);
+    console.log(url);
+    setFileUrl(url);
   }, []);
   const {
     getRootProps,
@@ -39,8 +46,6 @@ const CreateNFT = () => {
       `,
     [isDragAccept, isDragActive, isDragReject]
   );
-
-  console.log(formInput);
 
   return (
     <div className="flex justify-center sm:px-4 p-12">
@@ -114,7 +119,7 @@ const CreateNFT = () => {
           <Button
             btnName="Create NFT"
             classStyles="rounded-lg"
-            handleClick={() => {}}
+            handleClick={() => createNFT(formInput, fileUrl, router)}
           />
         </div>
       </div>

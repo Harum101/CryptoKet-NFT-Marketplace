@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
+import { NFTContext } from "@/context/NFTContext";
+
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes"; //Helps to check if currently its light mode or dark mode
 import Image from "next/image"; //next js optimized version of img tag
@@ -47,9 +49,9 @@ const MenuItems = ({ isMobile, active, setActive }) => {
 };
 
 const ButtonGroup = ({ setActive, router }) => {
-  const hasConnected = true;
+  const { connectWallet, currentAccount } = useContext(NFTContext);
 
-  return hasConnected ? (
+  return currentAccount ? (
     <Button
       btnName="Create"
       classStyles="mx-2 rounded-xl"
@@ -62,7 +64,7 @@ const ButtonGroup = ({ setActive, router }) => {
     <Button
       btnName="Connect"
       classStyles="mx-2 rounded-xl"
-      handleClick={() => {}}
+      handleClick={connectWallet}
     />
   );
 };
